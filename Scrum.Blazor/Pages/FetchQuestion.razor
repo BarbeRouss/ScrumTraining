@@ -1,4 +1,4 @@
-﻿@page "/fetchdata/{QuestionIndex:int}"
+﻿@page "/fetchquestion/{QuestionIndex:int}"
 
 <PageTitle>Scrum questions</PageTitle>
 
@@ -17,23 +17,16 @@ else
         @foreach (var answer in question.Answers)
         {
             <tr>
-                <input type="checkbox" id="addition" name="math" @bind="@answer.IsUserSelected" />
-                <td>@answer.Text</td>
-            </tr>
-        }
-    </table>
-    
-    <table class="table" hidden=@hideAnswers>
-        @foreach (var answer in question.Answers)
-        {
-            <tr>
-                <input disabled=@true type="checkbox" @bind="@answer.IsSelected" />
-                <td>@answer.Text</td>
+                <input style="margin: 10px" type="checkbox" id="addition" name="math" @bind="@answer.IsUserSelected" />
+                <input style="margin: 10px" hidden=@hideAnswers disabled=@true type="checkbox" @bind="@answer.IsSelected" />
+
+                <span style="color: @GetAnswerColor(answer);margin: 10px">@answer.Text</span>
             </tr>
         }
     </table>
     
     <button class="btn btn-primary" @onclick="@(async () => await Validate())">Validate</button>
+    <p></p>
     <button class="btn btn-primary" @onclick="@(async () => await ToNextQuestion())">Next question</button>
 }
 
@@ -65,16 +58,30 @@ else
     protected async Task ToNextQuestion()
     {
         QuestionIndex++;
-        Navigation.NavigateTo($"/fetchdata/{QuestionIndex}");
-        
+        Navigation.NavigateTo($"/fetchquestion/{QuestionIndex}");
+
         question = await ForecastService.GetQuestion(QuestionIndex);
         hideAnswers = true;
-        
+
         // Note that the following line is necessary because otherwise
         // Blazor would not recognize the state change and not refresh the UI
         InvokeAsync(() =>
         {
             StateHasChanged();
         });
+    }
+
+    string GetAnswerColor(Answer answer)
+    {
+        if(hideAnswers)
+            return "black";
+
+        if(answer.IsSelected != @answer.IsUserSelected)
+            return "red";
+
+        if (answer.IsSelected && @answer.IsUserSelected)
+            return "green";
+
+        return "black";
     }
 }
