@@ -5,7 +5,9 @@ services:
     image: ${DOCKER_REGISTRY-}blazorappscrum
     build:
       context: .
-      dockerfile: Scrum.BlazorApp/Dockerfile
+      dockerfile: Scrum.Blazor/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://+:80
     restart: always
     ports:
       - 7272:80
