@@ -10,7 +10,7 @@ namespace Scrum.Blazor.Data
 
             var questionDetailSerialized = questionDetails[index];
 
-            var questionContent = questionDetailSerialized.Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
+            var questionContent = questionDetailSerialized.Split("\n", StringSplitOptions.RemoveEmptyEntries);
 
             return new Question()
             {
