@@ -6,16 +6,16 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["BlazorApp.Scrum/BlazorApp.Scrum.csproj", "BlazorApp.Scrum/"]
-RUN dotnet restore "BlazorApp.Scrum/BlazorApp.Scrum.csproj"
+COPY ["Scrum.Blazor/Scrum.Blazor.csproj", "Scrum.Blazor/"]
+RUN dotnet restore "Scrum.Blazor/Scrum.Blazor.csproj"
 COPY . .
-WORKDIR "/src/BlazorApp.Scrum"
-RUN dotnet build "BlazorApp.Scrum.csproj" -c Release -o /app/build
+WORKDIR "/src/Scrum.Blazor"
+RUN dotnet build "Scrum.Blazor.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "BlazorApp.Scrum.csproj" -c Release -o /app/publish
+RUN dotnet publish "Scrum.Blazor.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "BlazorApp.Scrum.dll"]
+ENTRYPOINT ["dotnet", "Scrum.Blazor.dll"]

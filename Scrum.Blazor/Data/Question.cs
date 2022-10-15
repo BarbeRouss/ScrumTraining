@@ -1,4 +1,4 @@
-namespace Blazor.Scrum.Data
+namespace Scrum.Blazor.Data
 {
     public class Question
     {
