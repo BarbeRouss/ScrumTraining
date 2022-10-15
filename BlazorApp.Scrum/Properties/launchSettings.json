@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "BlazorApp1": {
+    "Blazor.Scrum": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
