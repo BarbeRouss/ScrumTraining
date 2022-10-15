@@ -1,0 +1,80 @@
+﻿@page "/fetchdata/{QuestionIndex:int}"
+
+<PageTitle>Weather forecast</PageTitle>
+
+@using BlazorApp1.Data
+@inject QuestionService ForecastService
+@inject NavigationManager Navigation
+
+@if (question == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h1>@question.Index - @question.Text</h1>
+    <table class="table">
+        @foreach (var answer in question.Answers)
+        {
+            <tr>
+                <input type="checkbox" id="addition" name="math" @bind="@answer.IsUserSelected" />
+                <td>@answer.Text</td>
+            </tr>
+        }
+    </table>
+    
+    <table class="table" hidden=@hideAnswers>
+        @foreach (var answer in question.Answers)
+        {
+            <tr>
+                <input disabled=@true type="checkbox" @bind="@answer.IsSelected" />
+                <td>@answer.Text</td>
+            </tr>
+        }
+    </table>
+    
+    <button class="btn btn-primary" @onclick="@(async () => await Validate())">Validate</button>
+    <button class="btn btn-primary" @onclick="@(async () => await ToNextQuestion())">Next question</button>
+}
+
+@code {
+
+    [Parameter]
+    public int QuestionIndex { get; set; }
+
+    private Question? question;
+
+    private bool hideAnswers = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        question = await ForecastService.GetQuestion(QuestionIndex);
+    }
+
+    protected async Task Validate()
+    {
+        hideAnswers = false;
+        // Note that the following line is necessary because otherwise
+        // Blazor would not recognize the state change and not refresh the UI
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    protected async Task ToNextQuestion()
+    {
+        QuestionIndex++;
+        Navigation.NavigateTo($"/fetchdata/{QuestionIndex}");
+        
+        question = await ForecastService.GetQuestion(QuestionIndex);
+        hideAnswers = true;
+        
+        // Note that the following line is necessary because otherwise
+        // Blazor would not recognize the state change and not refresh the UI
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

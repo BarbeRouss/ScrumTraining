@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  blazorapp.scrum:
+    image: ${DOCKER_REGISTRY-}blazorappscrum
+    build:
+      context: .
+      dockerfile: BlazorApp.Scrum/Dockerfile
+    restart: always
+    ports:
+      - 7272:80
